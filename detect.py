@@ -48,8 +48,10 @@ if __name__ == "__main__":
         model.load_darknet_weights(opt.weights_path)
     else:
         # Load checkpoint weights
-        model.load_state_dict(torch.load(opt.weights_path))
-
+        if(torch.cuda.is_available()):
+            model.load_state_dict(torch.load(opt.weights_path))
+        else:
+            model.load_state_dict(torch.load(opt.weights_path, map_location=lambda storage, loc: storage))
     model.eval()  # Set in evaluation mode
 
     dataloader = DataLoader(
